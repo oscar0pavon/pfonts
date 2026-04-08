@@ -1,0 +1,4 @@
+*.a
+*.o
+cJSON.c
+cJSON.h
