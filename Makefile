@@ -18,7 +18,10 @@ clean:
 	rm -f libpfonts.a $(OBJ) 
 
 install: all
+	mkdir -p /usr/local/include/pfonts
 	cp -f libpfonts.a /usr/local/lib
+	cp pfonts.h /usr/local/include/pfonts
+
 
 
 .PHONY: all clean install
