@@ -1,9 +1,6 @@
 #!/bin/sh
 
-if [ ! -f cJSON.c ]; then
-  wget https://raw.githubusercontent.com/DaveGamble/cJSON/refs/heads/master/cJSON.c
-fi
-if [ ! -f lodepng.h ]; then
-  wget https://raw.githubusercontent.com/DaveGamble/cJSON/refs/heads/master/cJSON.h
+if [ ! -f stb_truetype.h ]; then
+  wget https://raw.githubusercontent.com/nothings/stb/refs/heads/master/stb_truetype.h
 fi
 

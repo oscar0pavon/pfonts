@@ -2,3 +2,4 @@
 *.o
 cJSON.c
 cJSON.h
+stb_truetype.h

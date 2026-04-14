@@ -98,3 +98,19 @@ void pfonts_draw_char(uint8_t character, PColor color, float x, float y,
 
   glDisable(GL_BLEND);
 }
+
+void pfonts_load_image_data(const char* image_data, int width, int height){
+
+  glGenTextures(1, &pfont_texture_id);
+
+  glBindTexture(GL_TEXTURE_2D, pfont_texture_id);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, image_data);
+}
