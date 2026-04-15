@@ -1,7 +1,10 @@
 #include "pfonts.h"
 #include <math.h>
+#include "shader.h"
 
 GLuint pfont_texture_id;
+
+GLuint pfonts_sdf_texture;
 
 void pfonts_set_ortho_projection(float width, float height){
 
@@ -99,11 +102,69 @@ void pfonts_draw_char(uint8_t character, PColor color, float x, float y,
   glDisable(GL_BLEND);
 }
 
-void pfonts_load_image_data(const char* image_data, int width, int height){
+void pfonts_draw_sdf_char(){
+  // Positions (Screen Space)
+  float x = 100.0f; 
+  float y = 100.0f;
+  float w = 64.0f; // The width you want to draw
+  float h = 64.0f; // The height you want to draw
 
-  glGenTextures(1, &pfont_texture_id);
+  glUseProgram(pfonts_shader);
 
-  glBindTexture(GL_TEXTURE_2D, pfont_texture_id);
+  glEnable(GL_BLEND);
+
+  glBindTexture(GL_TEXTURE_2D, pfonts_sdf_texture);
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+glBegin(GL_QUADS);
+    // Bottom Left
+    glTexCoord2f(0.0f, 0.0f); 
+    glVertex2f(x, y);
+
+    // Bottom Right
+    glTexCoord2f(1.0f, 0.0f); 
+    glVertex2f(x + w, y);
+
+    // Top Right
+    glTexCoord2f(1.0f, 1.0f); 
+    glVertex2f(x + w, y + h);
+
+    // Top Left
+    glTexCoord2f(0.0f, 1.0f); 
+    glVertex2f(x, y + h);
+glEnd();
+
+  glDisable(GL_TEXTURE_2D);
+  
+  glDisable(GL_BLEND);
+
+  glUseProgram(0);
+}
+void pfonts_generate_texture_sdf(GLuint* texture, const char* image_data, int width, int height) {
+    glGenTextures(1, texture);
+    glBindTexture(GL_TEXTURE_2D, *texture);
+
+    // CRITICAL: stbt_truetype outputs 1 byte per pixel. 
+    // If your width is not a multiple of 4, OpenGL will misread rows without this.
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); 
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Use GL_LUMINANCE for both internal format and data format.
+    // This tells OpenGL that each byte in image_data is a single grayscale value.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, width, height, 0, GL_LUMINANCE,
+                 GL_UNSIGNED_BYTE, image_data);
+}
+
+void pfonts_generate_texture(GLuint* texture, const char* image_data, int width, int height){
+
+  glGenTextures(1, texture);
+
+  glBindTexture(GL_TEXTURE_2D, *texture);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -113,4 +174,11 @@ void pfonts_load_image_data(const char* image_data, int width, int height){
 
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
                GL_UNSIGNED_BYTE, image_data);
+}
+
+
+void pfonts_load_image_data(const char* image_data, int width, int height){
+
+  pfonts_generate_texture(&pfont_texture_id, image_data, width, height);
+
 }

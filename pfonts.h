@@ -1,7 +1,9 @@
 #ifndef PFONTS_H
 #define PFONTS_H
 
+#define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
+#include <GL/glext.h>
 
 typedef struct PUV{
     float x;
@@ -30,6 +32,14 @@ void pfonts_load_font(const char* font_path);
 
 void pfonts_load_image_data(const char* image_data, int width, int height);
 
+void pfonts_generate_texture(GLuint* texture, const char* image_data, int width, int height);
+
+void pfonts_generate_texture_sdf(GLuint* texture, const char* image_data, int width, int height);
+
+void pfonts_draw_sdf_char();
+
 extern GLuint pfont_texture_id;
+
+extern GLuint pfonts_sdf_texture;
 
 #endif
