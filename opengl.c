@@ -102,13 +102,7 @@ void pfonts_draw_char(uint8_t character, PColor color, float x, float y,
   glDisable(GL_BLEND);
 }
 
-void pfonts_draw_sdf_char(){
-  // Positions (Screen Space)
-  float x = 100.0f; 
-  float y = 100.0f;
-  float w = 64.0f; // The width you want to draw
-  float h = 64.0f; // The height you want to draw
-
+void pfonts_draw_sdf_char(float x, float y, float width, float height){
   glUseProgram(pfonts_shader);
 
   glEnable(GL_TEXTURE_2D);
@@ -119,23 +113,19 @@ void pfonts_draw_sdf_char(){
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-glBegin(GL_QUADS);
-    // Bottom Left
-    glTexCoord2f(0.0f, 1.0f); // Changed from 0.0
-    glVertex2f(x, y);
+  glBegin(GL_QUADS);
+      glTexCoord2f(0.0f, 1.0f);
+      glVertex2f(x, y);
 
-    // Bottom Right
-    glTexCoord2f(0.0f, 0.0f); // Changed from 0.0
-    glVertex2f(x + w, y);
+      glTexCoord2f(0.0f, 0.0f);
+      glVertex2f(x + width, y);
 
-    // Top Right
-    glTexCoord2f(1.0f, 0.0f); // Changed from 1.0
-    glVertex2f(x + w, y + h);
+      glTexCoord2f(1.0f, 0.0f);
+      glVertex2f(x + width, y + height);
 
-    // Top Left
-    glTexCoord2f(1.0f, 1.0f); // Changed from 1.0
-    glVertex2f(x, y + h);
-glEnd();
+      glTexCoord2f(1.0f, 1.0f);
+      glVertex2f(x, y + height);
+  glEnd();
 
   glDisable(GL_TEXTURE_2D);
   

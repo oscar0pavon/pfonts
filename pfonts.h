@@ -36,7 +36,7 @@ void pfonts_generate_texture(GLuint* texture, const char* image_data, int width,
 
 void pfonts_generate_texture_sdf(GLuint* texture, const char* image_data, int width, int height);
 
-void pfonts_draw_sdf_char();
+void pfonts_draw_sdf_char(float x, float y, float width, float height);
 
 extern GLuint pfont_texture_id;
 
