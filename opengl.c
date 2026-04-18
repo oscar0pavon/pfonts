@@ -111,6 +111,8 @@ void pfonts_draw_sdf_char(){
 
   glUseProgram(pfonts_shader);
 
+  glEnable(GL_TEXTURE_2D);
+
   glEnable(GL_BLEND);
 
   glBindTexture(GL_TEXTURE_2D, pfonts_sdf_texture);
@@ -119,19 +121,19 @@ void pfonts_draw_sdf_char(){
 
 glBegin(GL_QUADS);
     // Bottom Left
-    glTexCoord2f(0.0f, 0.0f); 
+    glTexCoord2f(0.0f, 1.0f); // Changed from 0.0
     glVertex2f(x, y);
 
     // Bottom Right
-    glTexCoord2f(1.0f, 0.0f); 
+    glTexCoord2f(0.0f, 0.0f); // Changed from 0.0
     glVertex2f(x + w, y);
 
     // Top Right
-    glTexCoord2f(1.0f, 1.0f); 
+    glTexCoord2f(1.0f, 0.0f); // Changed from 1.0
     glVertex2f(x + w, y + h);
 
     // Top Left
-    glTexCoord2f(0.0f, 1.0f); 
+    glTexCoord2f(1.0f, 1.0f); // Changed from 1.0
     glVertex2f(x, y + h);
 glEnd();
 
