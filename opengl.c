@@ -1,6 +1,7 @@
 #include "pfonts.h"
 #include <math.h>
 #include "shader.h"
+#include "truetype.h"
 
 GLuint pfont_texture_id;
 
@@ -102,14 +103,15 @@ void pfonts_draw_char(uint8_t character, PColor color, float x, float y,
   glDisable(GL_BLEND);
 }
 
-void pfonts_draw_sdf_char(float x, float y, float width, float height){
+void pfonts_draw_with_texture_id(GLuint texture_id, float x, float y, float width, float height){
+
   glUseProgram(pfonts_shader);
 
   glEnable(GL_TEXTURE_2D);
 
   glEnable(GL_BLEND);
 
-  glBindTexture(GL_TEXTURE_2D, pfonts_sdf_texture);
+  glBindTexture(GL_TEXTURE_2D, texture_id);
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -132,6 +134,13 @@ void pfonts_draw_sdf_char(float x, float y, float width, float height){
   glDisable(GL_BLEND);
 
   glUseProgram(0);
+}
+
+void pfonts_draw_sdf_char(float x, float y, float width, float height){
+  pfonts_draw_with_texture_id(pfonts_sdf_texture, x, y , width, height);
+
+  pfonts_draw_with_texture_id(pfonts_ascii_atlas.texture_id, 500, 300 , 256, 256);
+
 }
 void pfonts_generate_texture_sdf(GLuint* texture, const char* image_data, int width, int height) {
     glGenTextures(1, texture);
