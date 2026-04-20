@@ -103,6 +103,58 @@ void pfonts_draw_char(uint8_t character, PColor color, float x, float y,
   glDisable(GL_BLEND);
 }
 
+void pfonts_draw_glyph_from_atlas(PFontsAtlas* atlas,
+    int character, 
+    float x, float y, float scale){
+
+  PFontsGlyphInfo glyph = atlas->glyphs[character];
+
+  float w = glyph.bitmap_width * scale;
+  float h = glyph.bitmap_height * scale;
+
+  float x_off = glyph.x_offset * scale;
+  float y_off = glyph.y_offset * scale;
+
+  float x0 = x + x_off;
+  float y0 = y + y_off;
+  float x1 = x0 + w;
+  float y1 = y0 + h;
+
+  glUseProgram(pfonts_shader);
+
+  glEnable(GL_TEXTURE_2D);
+
+  glEnable(GL_BLEND);
+
+  glBindTexture(GL_TEXTURE_2D, atlas->texture_id);
+
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+glBegin(GL_QUADS);
+    // Top-Left: Standard u0, but we use v1 to flip vertically
+    glTexCoord2f(glyph.u0, glyph.v0); 
+    glVertex2f(x0, y0);
+
+    // Top-Right: Standard u1, and v1
+    glTexCoord2f(glyph.u1, glyph.v0); 
+    glVertex2f(x1, y0);
+
+    // Bottom-Right: Standard u1, but v0 for the bottom
+    glTexCoord2f(glyph.u1, glyph.v1); 
+    glVertex2f(x1, y1);
+
+    // Bottom-Left: Standard u0, and v0
+    glTexCoord2f(glyph.u0, glyph.v1); 
+    glVertex2f(x0, y1);
+glEnd();
+
+  glDisable(GL_TEXTURE_2D);
+  
+  glDisable(GL_BLEND);
+
+  glUseProgram(0);
+}
+
 void pfonts_draw_with_texture_id(GLuint texture_id, float x, float y, float width, float height){
 
   glUseProgram(pfonts_shader);
@@ -137,9 +189,11 @@ void pfonts_draw_with_texture_id(GLuint texture_id, float x, float y, float widt
 }
 
 void pfonts_draw_sdf_char(float x, float y, float width, float height){
-  pfonts_draw_with_texture_id(pfonts_sdf_texture, x, y , width, height);
+  // pfonts_draw_with_texture_id(pfonts_sdf_texture, x, y , width, height);
+  //
+  // pfonts_draw_with_texture_id(pfonts_ascii_atlas.texture_id, 500, 300 , 256, 256);
 
-  pfonts_draw_with_texture_id(pfonts_ascii_atlas.texture_id, 500, 300 , 256, 256);
+  pfonts_draw_glyph_from_atlas(&pfonts_ascii_atlas, (int)'a', 100,200, 1);
 
 }
 void pfonts_generate_texture_sdf(GLuint* texture, const char* image_data, int width, int height) {

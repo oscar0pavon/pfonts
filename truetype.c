@@ -46,11 +46,15 @@ void pfonts_atlas_range(PFontsAtlas* atlas, float scale, int min, int max){
       }
 
       // Store UVs for rendering
-      atlas->glyphs[i].texture_x = (float)current_x / atlas->width;
-      atlas->glyphs[i].texture_y = (float)current_y / atlas->height;
+      atlas->glyphs[i].u0= (float)current_x / atlas->width;
+      atlas->glyphs[i].v0= (float)current_y / atlas->height;
+      atlas->glyphs[i].u1= (float)(current_x + w) / atlas->height;
+      atlas->glyphs[i].v1= (float)(current_y + h) / atlas->height;
+
       atlas->glyphs[i].bitmap_width = w;
       atlas->glyphs[i].bitmap_height = h;
-      // ... store offsets and advance ...
+      atlas->glyphs[i].x_offset = xoff;
+      atlas->glyphs[i].y_offset = yoff;
 
       current_x += w + 1;
       if (h > max_row_h) max_row_h = h;
