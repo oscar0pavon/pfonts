@@ -28,6 +28,10 @@ void pfonts_atlas_range(PFontsAtlas* atlas, float scale, int min, int max){
           &pfonts_loaded_font, 
           scale, stbtt_FindGlyphIndex(&pfonts_loaded_font,i), 
           padding, onedge, dist_scale, &w, &h, &xoff, &yoff);
+      if(!sdf){
+        printf("Can't get glyph\n");
+        continue;
+      }
 
       // Simple row-based packing logic
       if (current_x + w + 1 >= atlas->width) {
@@ -56,7 +60,12 @@ void pfonts_atlas_range(PFontsAtlas* atlas, float scale, int min, int max){
 }
 
 void pfonts_init_atlas(PFontsAtlas *atlas){
-  atlas->data = (unsigned char*)calloc(atlas->width * atlas->height, 1);
+  unsigned char* new_data = (unsigned char*)calloc(atlas->width * atlas->height, 1);
+
+  if(!new_data)
+    printf("Can't allocate memory\n");
+
+  atlas->data = new_data;
 
   float scale = stbtt_ScaleForPixelHeight(&pfonts_loaded_font, 64); // Target height in pixels
 
