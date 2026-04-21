@@ -130,23 +130,20 @@ void pfonts_draw_glyph_from_atlas(PFontsAtlas* atlas,
 
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-glBegin(GL_QUADS);
-    // Top-Left: Standard u0, but we use v1 to flip vertically
-    glTexCoord2f(glyph.u0, glyph.v0); 
-    glVertex2f(x0, y0);
+  glBegin(GL_QUADS);
+      glTexCoord2f(glyph.u1, glyph.v0);
+      glVertex2f(x0, y1);
 
-    // Top-Right: Standard u1, and v1
-    glTexCoord2f(glyph.u1, glyph.v0); 
-    glVertex2f(x1, y0);
+      glTexCoord2f(glyph.u0, glyph.v0);
+      glVertex2f(x0, y0);
 
-    // Bottom-Right: Standard u1, but v0 for the bottom
-    glTexCoord2f(glyph.u1, glyph.v1); 
-    glVertex2f(x1, y1);
+      glTexCoord2f(glyph.u0, glyph.v1);
+      glVertex2f(x1, y0);
 
-    // Bottom-Left: Standard u0, and v0
-    glTexCoord2f(glyph.u0, glyph.v1); 
-    glVertex2f(x0, y1);
-glEnd();
+      glTexCoord2f(glyph.u1, glyph.v1);
+      
+      glVertex2f(x1, y1);
+  glEnd();
 
   glDisable(GL_TEXTURE_2D);
   
