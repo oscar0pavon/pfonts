@@ -45,11 +45,13 @@ void pfonts_atlas_range(PFontsAtlas* atlas, float scale, int min, int max){
           memcpy(&atlas->data[(current_y + j) * atlas->width + current_x], &sdf[j * w], w);
       }
 
+      float uv_padding = 1.5f;
+
       // Store UVs for rendering
-      atlas->glyphs[i].u0= (float)current_x / atlas->width;
-      atlas->glyphs[i].v0= (float)current_y / atlas->height;
-      atlas->glyphs[i].u1= (float)(current_x + w) / atlas->height;
-      atlas->glyphs[i].v1= (float)(current_y + h) / atlas->height;
+      atlas->glyphs[i].u0= (float)(current_x + uv_padding) / atlas->width;
+      atlas->glyphs[i].v0= (float)(current_y + uv_padding) / atlas->height;
+      atlas->glyphs[i].u1= (float)(current_x + w - uv_padding) / atlas->width;
+      atlas->glyphs[i].v1= (float)(current_y + h - uv_padding) / atlas->height;
 
       atlas->glyphs[i].bitmap_width = w;
       atlas->glyphs[i].bitmap_height = h;

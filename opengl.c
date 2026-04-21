@@ -109,14 +109,11 @@ void pfonts_draw_glyph_from_atlas(PFontsAtlas* atlas,
 
   PFontsGlyphInfo glyph = atlas->glyphs[character];
 
-  float w = glyph.bitmap_width * scale;
-  float h = glyph.bitmap_height * scale;
+  float w = glyph.bitmap_width;
+  float h = glyph.bitmap_height;
 
-  float x_off = glyph.x_offset * scale;
-  float y_off = glyph.y_offset * scale;
-
-  float x0 = x + x_off;
-  float y0 = y + y_off;
+  float x0 = floorf(x + (float)glyph.x_offset);
+  float y0 = floorf(y + (float)glyph.y_offset);
   float x1 = x0 + w;
   float y1 = y0 + h;
 
